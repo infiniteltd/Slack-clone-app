@@ -4,16 +4,36 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { selectRoomId } from '../features/appSlice';
 import ChatInput from './ChatInput';
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import { collection, doc, query, orderBy } from 'firebase/firestore';
+import { db } from '../firebase';
 
 function Chat() {
     const roomId = useSelector(selectRoomId);
+    console.log('roomId:', roomId);
+
+    const roomRef = collection(db, 'rooms');
+    const [roomDetails] = useDocument(
+        roomId && doc(roomRef, roomId)
+    );
+
+    const messageRef = collection(db, 'rooms', roomId, 'messages');
+
+    console.log('messageRef:', messageRef);
+
+    const [roomMessages] = useCollection(
+        roomId && query(messageRef, orderBy('timestamp', 'asc'))
+    );
+
+    console.log(roomDetails?.data());
+    console.log(roomMessages);
 
     return (
         <ChatContainer>
             <>
                 <Header>
                     <HeaderLeft>
-                        <h4><strong>#Room-name</strong></h4>
+                        <h4><strong>#room-name</strong></h4>
                         <StarBorderOutlined />
                     </HeaderLeft>
 

@@ -18,6 +18,8 @@ function ChatInput({ channelName, channelId }) {
         await addDoc(collection(colRef, channelId, 'messages'), {
             message: input,
             timestamp: serverTimestamp(),
+            user: 'Kris Codes',
+            userImage: 'https://i.pinimg.com/564x/69/bf/8a/69bf8a0652a157bdc540e5de2d740169.jpg',
         });
 
         setInput(''); // Clears the input after sending the message
