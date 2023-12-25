@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Button } from '@mui/material';
 import styled from 'styled-components';
 import { addDoc, collection } from 'firebase/firestore';
-import { db, serverTimestamp } from '../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { db, auth, serverTimestamp } from '../firebase';
 
-function ChatInput({ channelName, channelId }) {
+function ChatInput({ channelName, channelId, chatRef }) {
     const [input, setInput] = useState('');
-    const colRef = collection(db, 'rooms');
+    const [user] = useAuthState(auth);
 
     const sendMessage = async (e) => {
         e.preventDefault();
@@ -15,11 +16,17 @@ function ChatInput({ channelName, channelId }) {
             return false;
         }
 
-        await addDoc(collection(colRef, channelId, 'messages'), {
+        const messageRef = collection(db, 'rooms', channelId, 'messages');
+
+        await addDoc(messageRef, {
             message: input,
             timestamp: serverTimestamp(),
-            user: 'Kris Codes',
-            userImage: 'https://i.pinimg.com/564x/69/bf/8a/69bf8a0652a157bdc540e5de2d740169.jpg',
+            user: user.displayName,
+            userImage: user.photoURL,
+        });
+
+        chatRef?.current?.scrollIntoView({
+            behavior: 'smooth',
         });
 
         setInput(''); // Clears the input after sending the message
@@ -31,7 +38,7 @@ function ChatInput({ channelName, channelId }) {
                 <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder={`Message #ROOM`}
+                    placeholder={`Message #${channelName}`}
                 />
                 <Button hidden type='submit' onClick={sendMessage}>
                     SEND

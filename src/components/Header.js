@@ -2,25 +2,29 @@ import React from 'react';
 import styled from 'styled-components';
 import { Avatar } from '@mui/material';
 import { AccessTime, Search, HelpOutline } from '@mui/icons-material';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase';
+import { signOut } from 'firebase/auth';
 
 function Header() {
+    const [user] = useAuthState(auth);
+
     return (
         <HeaderContainer>
-            {/* Header Left */}
             <HeaderLeft>
                 <HeaderAvatar
-                    // TODO Add onClick 
-                    src=''
+                    onClick={() => signOut(auth)}
+                    src={user?.photoURL}
+                    alt={user?.displayName}
                 />
                 <AccessTime />
             </HeaderLeft>
-            {/* Header Search */}
+
             <HeaderSearch>
                 <input placeholder='Search krisCodesChannel' />
                 <Search />
             </HeaderSearch>
 
-            {/* Header Right */}
             <HeaderRight>
                 <HelpOutline />
             </HeaderRight>

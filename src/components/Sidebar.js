@@ -3,12 +3,14 @@ import styled from 'styled-components';
 import { FiberManualRecord, Create, InsertComment, Inbox, Drafts, BookmarkBorder, PeopleAlt, Apps, FileCopy, ExpandLess, ExpandMore, Add } from '@mui/icons-material';
 import SidebarOption from '../utilities/SidebarOption';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { collection } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 
 function Sidebar() {
-    const colRef = collection(db, 'rooms');
-    const [channels, loading, error] = useCollection(colRef);
+    const colRef = collection(db, "rooms");
+    const [channels] = useCollection(colRef);
+    const [user] = useAuthState(auth);
     return (
         <SidebarContainer>
             <SidebarHeader>
@@ -16,7 +18,7 @@ function Sidebar() {
                     <h2> Learn W/KrisCodes </h2>
                     <h3>
                         <FiberManualRecord />
-                        Kris Sams
+                        {user.displayName}
                     </h3>
                 </SidebarInfo>
                 <Create />
