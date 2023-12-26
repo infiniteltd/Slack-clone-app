@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Button } from "@mui/material";
 import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
+import slackLogo from '../assests/slackLogo.png';
 
 function Login() {
 
@@ -16,7 +17,7 @@ function Login() {
         <LoginContainer>
             <LoginInnerContainer>
                 <img
-                    src='https://assets.stickpng.com/images/5cb480cd5f1b6d3fbadece79.png'
+                    src={slackLogo}
                     alt='slack logo'
                 />
                 <h1>Sign in to the Slack Channel</h1>
